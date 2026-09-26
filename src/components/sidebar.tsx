@@ -9,7 +9,7 @@ import {
   SendIcon,
   ShieldIcon,
   TemplateIcon,
-} from './icons.js'
+} from './icons.tsx'
 
 type NavItem = { label: string; href: string; icon: () => JSX.Element; children?: string[] }
 
@@ -55,7 +55,6 @@ export const Sidebar = ({ open, active = 'Basecamp' }: { open: boolean; active?:
     >
       <nav class="flex-1 flex flex-col gap-1 px-2 py-4 overflow-y-auto overflow-x-hidden">
         <button
-         
           class="ml-0.5 mb-3 w-11 h-11 shrink-0 rounded-full bg-[#2b2b2b] text-white grid place-items-center hover:bg-black"
           aria-label={open ? 'Collapse menu' : 'Expand menu'}
           aria-expanded={open ? 'true' : 'false'}

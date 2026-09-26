@@ -2,6 +2,9 @@
   "name": "my-hono-app",
   "private": true,
   "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
   "engines": {
     "node": "24.x"
   },

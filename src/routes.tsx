@@ -1,8 +1,8 @@
 import { Hono } from 'hono'
 import { secureHeaders } from 'hono/secure-headers'
-import { Layout } from './components/layout.js'
-import { Dashboard, FilesPanel, type FilesTab } from './components/dashboard.js'
-import { Sidebar } from './components/sidebar.js'
+import { Layout } from './components/layout.tsx'
+import { Dashboard, FilesPanel, type FilesTab } from './components/dashboard.tsx'
+import { Sidebar } from './components/sidebar.tsx'
 
 const app = new Hono()
 

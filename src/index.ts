@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { logger } from 'hono/logger'
-// Import with '.js' — Vercel compiles app.tsx to app.js but doesn't rewrite import paths
-import htmxApp from './app.js'
+// '.tsx' import is rewritten to '.js' when tsc builds dist/ (rewriteRelativeImportExtensions)
+import htmxApp from './routes.tsx'
 
 const app = new Hono()
 

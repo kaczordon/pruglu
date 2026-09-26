@@ -7,25 +7,25 @@ import {
   SendIcon,
   UploadIcon,
   UserPlusIcon,
-} from './icons.js'
-import { Sidebar } from './sidebar.js'
+} from './icons.tsx'
+import { Sidebar } from './sidebar.tsx'
 
 const GREEN = '#3fae4a'
 
 const Header = () => (
-  <header class="flex items-center justify-between px-6 pt-4">
-    <a href="/" class="text-3xl font-black leading-[0.8] tracking-tight">
+  <header class="flex items-center justify-between gap-2 px-3 pt-4 sm:px-6">
+    <a href="/" class="shrink-0 text-2xl font-black leading-[0.8] tracking-tight sm:text-3xl">
       pru
       <br />
       glu
     </a>
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-1.5 sm:gap-3">
       <button
-       
-        class="flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-white shadow hover:brightness-110"
+        aria-label="Upload"
+        class="flex items-center gap-2 rounded-full px-2.5 py-1.5 sm:px-4 text-xs font-semibold text-white shadow hover:brightness-110"
         style={`background:${GREEN}`}
       >
-        <UploadIcon /> Upload
+        <UploadIcon /> <span class="hidden sm:inline">Upload</span>
       </button>
       <button aria-label="Invite" class="w-8 h-8 rounded-full bg-gray-100 grid place-items-center hover:bg-gray-200">
         <UserPlusIcon />
@@ -43,8 +43,7 @@ const Header = () => (
 
 const Tab = ({ label, active, ...rest }: { label: string; active: boolean; [k: string]: unknown }) => (
   <button
-   
-    class={`px-6 py-2 text-sm border-b-2 ${active ? 'font-semibold' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
+    class={`px-4 py-2 text-sm border-b-2 sm:px-6 ${active ? 'font-semibold' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
     style={active ? `border-color:${GREEN}` : undefined}
     {...rest}
   >
@@ -53,7 +52,7 @@ const Tab = ({ label, active, ...rest }: { label: string; active: boolean; [k: s
 )
 
 const Panel = ({ id, children }: { id?: string; children: Child }) => (
-  <section id={id} class="rounded-lg border border-gray-200 shadow-sm p-2 min-h-[400px] flex flex-col">
+  <section id={id} class="rounded-lg border border-gray-200 shadow-sm p-2 flex flex-col lg:min-h-[400px]">
     {children}
   </section>
 )
@@ -79,12 +78,12 @@ const KitPanel = () => (
     <div class="flex">
       <Tab label="Kit" active />
     </div>
-    <div class="flex-1 grid place-items-center py-6">
-      <div class="grid grid-cols-2 gap-x-12 gap-y-8">
+    <div class="flex-1 grid place-items-center p-2 sm:py-6">
+      <div class="grid w-full grid-cols-2 gap-4 sm:w-auto sm:gap-x-12 sm:gap-y-8">
         {KIT.map((tile) => (
           <a
             href="#"
-            class="w-34 h-28 rounded-lg bg-white shadow-md flex flex-col items-center justify-center gap-2 text-center text-sm font-semibold leading-tight transition hover:shadow-lg hover:-translate-y-0.5"
+            class="w-full h-28 sm:w-34 rounded-lg bg-white shadow-md flex flex-col items-center justify-center gap-2 text-center text-sm font-semibold leading-tight transition hover:shadow-lg hover:-translate-y-0.5"
           >
             {tile.art}
             <span>{tile.label}</span>
@@ -132,11 +131,11 @@ const FORMS: Doc[][] = [
 export type FilesTab = 'files' | 'forms'
 
 const DocCard = ({ doc }: { doc: Doc }) => (
-  <div class="relative w-36 h-36">
+  <div class="relative w-full max-w-36 h-36">
     {doc.backing && (
-      <div class="absolute top-0 left-3 w-28 h-16 -rotate-3" style={`background:${doc.backing}`} />
+      <div class="absolute top-0 left-3 right-5 h-20 -rotate-3" style={`background:${doc.backing}`} />
     )}
-    <div class="absolute top-0 left-4 w-28 h-16 bg-white border border-gray-400 p-2 flex flex-col gap-1">
+    <div class="absolute top-0 inset-x-4 h-20 bg-white border border-gray-400 p-2 flex flex-col gap-1">
       <div class="h-1 w-1/2 mx-auto bg-gray-400" />
       <div class="h-0.5 w-full bg-gray-300" />
       <div class="h-0.5 w-5/6 bg-gray-300" />
@@ -150,9 +149,8 @@ const DocCard = ({ doc }: { doc: Doc }) => (
       <span>{doc.name}</span>
     </a>
     <button
-     
       aria-label={doc.action === 'send' ? 'Send' : 'Add'}
-      class="absolute -bottom-3 -right-3 w-8 h-8 rounded-full text-white grid place-items-center shadow hover:brightness-110"
+      class="absolute -bottom-3 -right-2 sm:-right-3 w-8 h-8 rounded-full text-white grid place-items-center shadow hover:brightness-110"
       style={`background:${GREEN}`}
     >
       {doc.action === 'send' ? <SendIcon size={16} /> : <PlusIcon />}
@@ -175,7 +173,7 @@ export const FilesPanel = ({ tab, page }: { tab: FilesTab; page: number }) => {
         <Tab label="Files" active={tab === 'files'} {...load('files', 0)} />
         <Tab label="Forms" active={tab === 'forms'} {...load('forms', 0)} />
       </div>
-      <div class="flex-1 grid grid-cols-2 gap-y-8 justify-items-center content-center py-6">
+      <div class="flex-1 grid grid-cols-2 gap-x-6 gap-y-8 justify-items-center content-center px-3 py-6">
         {pages[current].map((doc) => (
           <DocCard doc={doc} />
         ))}
@@ -183,7 +181,6 @@ export const FilesPanel = ({ tab, page }: { tab: FilesTab; page: number }) => {
       {pages.length > 1 && (
         <div class="flex items-center justify-center gap-6 pb-3">
           <button
-           
             aria-label="Previous page"
             class="disabled:text-gray-300"
             style={current > 0 ? `color:${GREEN}` : undefined}
@@ -198,7 +195,6 @@ export const FilesPanel = ({ tab, page }: { tab: FilesTab; page: number }) => {
             ))}
           </div>
           <button
-           
             aria-label="Next page"
             class="disabled:text-gray-300"
             style={current < pages.length - 1 ? `color:${GREEN}` : undefined}
@@ -218,11 +214,11 @@ export const Dashboard = () => (
     <Sidebar open={false} />
     <div class="pl-[68px] min-h-screen">
       <Header />
-      <main class="px-6 pb-8">
-        <h1 class="mt-3 rounded-lg border border-gray-200 shadow-sm py-2 text-center text-2xl font-bold">
+      <main class="px-3 pb-8 sm:px-6">
+        <h1 class="mt-3 rounded-lg border border-gray-200 shadow-sm py-2 text-center text-xl font-bold sm:text-2xl">
           You've Got E-Mail
         </h1>
-        <div class="mt-5 grid gap-8 lg:grid-cols-2">
+        <div class="mt-5 grid gap-5 sm:gap-8 lg:grid-cols-2">
           <KitPanel />
           <FilesPanel tab="files" page={0} />
         </div>
