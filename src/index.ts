@@ -1,8 +1,7 @@
 import { Hono } from 'hono'
 import { logger } from 'hono/logger'
-// 1. Notice the default import syntax without brackets
-// 2. Added explicit file extension '.tsx' for Vercel's bundler
-import htmxApp from './app.tsx' 
+// Import with '.js' — Vercel compiles app.tsx to app.js but doesn't rewrite import paths
+import htmxApp from './app.js'
 
 const app = new Hono()
 
