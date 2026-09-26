@@ -1,12 +1,16 @@
 {
-  "name": "hono",
+  "name": "my-hono-app",
+  "private": true,
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "dependencies": {
     "hono": "^4.13.9"
   },
   "devDependencies": {
-    "@types/node": "^26.6.3",
+    "@types/node": "^24.0.0",
     "tsx": "^4.23.0",
-    "typescript": "^7.0.2"
+    "typescript": "6.0.3"
   }
 }
