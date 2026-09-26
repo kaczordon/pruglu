@@ -1,14 +1,14 @@
 import { Hono } from 'hono'
+import { logger } from 'hono/logger'
+// 1. Notice the default import syntax without brackets
+// 2. Added explicit file extension '.tsx' for Vercel's bundler
+import htmxApp from './app.tsx' 
 
 const app = new Hono()
 
-const welcomeStrings = [
-  'Hello Hono!',
-  'To learn more about Hono on Vercel, visit https://vercel.com/docs/frameworks/backend/hono',
-]
+app.use('*', logger())
 
-app.get('/', (c) => {
-  return c.text(welcomeStrings.join('\n\n'))
-})
+// Mount the app
+app.route('/', htmxApp)
 
 export default app
