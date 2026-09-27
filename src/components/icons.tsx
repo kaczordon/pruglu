@@ -1,7 +1,8 @@
 import type { Child } from 'hono/jsx'
 
-const Svg = ({ size = 22, children }: { size?: number; children: Child }) => (
+const Svg = ({ size = 22, class: cls, children }: { size?: number; class?: string; children: Child }) => (
   <svg
+    class={cls}
     width={size}
     height={size}
     viewBox="0 0 24 24"
@@ -112,8 +113,8 @@ export const PlusIcon = () => (
   </Svg>
 )
 
-export const ChevronLeftIcon = () => (
-  <Svg size={20}>
+export const ChevronLeftIcon = ({ class: cls }: { class?: string } = {}) => (
+  <Svg size={20} class={cls}>
     <path d="M15 18l-6-6 6-6" />
   </Svg>
 )
@@ -121,5 +122,101 @@ export const ChevronLeftIcon = () => (
 export const ChevronRightIcon = () => (
   <Svg size={20}>
     <path d="M9 18l6-6-6-6" />
+  </Svg>
+)
+
+type IconProps = { size?: number; class?: string }
+
+export const ChevronDownIcon = ({ size = 18, class: cls }: IconProps) => (
+  <Svg size={size} class={cls}>
+    <path d="m6 9 6 6 6-6" />
+  </Svg>
+)
+
+export const ListOrderedIcon = ({ size = 16 }: IconProps) => (
+  <Svg size={size}>
+    <path d="M10 6h11M10 12h11M10 18h11" />
+    <path d="M4 6h1v4M4 10h2" />
+    <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
+  </Svg>
+)
+
+export const ListBulletIcon = ({ size = 16 }: IconProps) => (
+  <Svg size={size}>
+    <path d="M8 6h13M8 12h13M8 18h13" />
+    <circle cx="4" cy="6" r="1" />
+    <circle cx="4" cy="12" r="1" />
+    <circle cx="4" cy="18" r="1" />
+  </Svg>
+)
+
+export const AlignIcon = ({ size = 16 }: IconProps) => (
+  <Svg size={size}>
+    <path d="M3 6h18M3 12h12M3 18h16" />
+  </Svg>
+)
+
+export const LinkIcon = ({ size = 16 }: IconProps) => (
+  <Svg size={size}>
+    <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5" />
+    <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.5-1.5" />
+  </Svg>
+)
+
+export const ImageIcon = ({ size = 16 }: IconProps) => (
+  <Svg size={size}>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <circle cx="9" cy="9" r="2" />
+    <path d="m21 15-5-5L5 21" />
+  </Svg>
+)
+
+export const ClearFormatIcon = ({ size = 16 }: IconProps) => (
+  <Svg size={size}>
+    <path d="M4 7V4h12v3" />
+    <path d="M10 4 7 20" />
+    <path d="m15 14 6 6M21 14l-6 6" />
+  </Svg>
+)
+
+export const UndoIcon = ({ size = 16 }: IconProps) => (
+  <Svg size={size}>
+    <path d="M9 14 4 9l5-5" />
+    <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
+  </Svg>
+)
+
+export const RedoIcon = ({ size = 16 }: IconProps) => (
+  <Svg size={size}>
+    <path d="m15 14 5-5-5-5" />
+    <path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13" />
+  </Svg>
+)
+
+export const SearchIcon = ({ size = 14 }: IconProps) => (
+  <Svg size={size}>
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </Svg>
+)
+
+export const PaperclipIcon = ({ size = 14 }: IconProps) => (
+  <Svg size={size}>
+    <path d="m21 12-8.5 8.5a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8" />
+  </Svg>
+)
+
+export const MoreIcon = ({ size = 20 }: IconProps) => (
+  <Svg size={size}>
+    <circle cx="5" cy="12" r="1" />
+    <circle cx="12" cy="12" r="1" />
+    <circle cx="19" cy="12" r="1" />
+  </Svg>
+)
+
+export const InfoIcon = ({ size = 20, class: cls }: IconProps) => (
+  <Svg size={size} class={cls}>
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 11v5M12 7.5v.01" />
   </Svg>
 )

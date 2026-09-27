@@ -1,45 +1,6 @@
 import type { Child } from 'hono/jsx'
-import {
-  BellIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  PlusIcon,
-  SendIcon,
-  UploadIcon,
-  UserPlusIcon,
-} from './icons.tsx'
-import { Sidebar } from './sidebar.tsx'
-
-const GREEN = '#3fae4a'
-
-const Header = () => (
-  <header class="flex items-center justify-between gap-2 px-3 pt-4 sm:px-6">
-    <a href="/" class="shrink-0 text-2xl font-black leading-[0.8] tracking-tight sm:text-3xl">
-      pru
-      <br />
-      glu
-    </a>
-    <div class="flex items-center gap-1.5 sm:gap-3">
-      <button
-        aria-label="Upload"
-        class="flex items-center gap-2 rounded-full px-2.5 py-1.5 sm:px-4 text-xs font-semibold text-white shadow hover:brightness-110"
-        style={`background:${GREEN}`}
-      >
-        <UploadIcon /> <span class="hidden sm:inline">Upload</span>
-      </button>
-      <button aria-label="Invite" class="w-8 h-8 rounded-full bg-gray-100 grid place-items-center hover:bg-gray-200">
-        <UserPlusIcon />
-      </button>
-      <button aria-label="Notifications" class="w-8 h-8 rounded-full bg-gray-100 grid place-items-center hover:bg-gray-200">
-        <BellIcon />
-      </button>
-      <button aria-label="Help" class="w-8 h-8 rounded-full bg-gray-100 grid place-items-center font-bold text-sm hover:bg-gray-200">
-        ?
-      </button>
-      <div class="w-8 h-8 rounded-full bg-gray-100 grid place-items-center text-xs font-semibold">JK</div>
-    </div>
-  </header>
-)
+import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, SendIcon } from './icons.tsx'
+import { GREEN, Shell } from './shell.tsx'
 
 const Tab = ({ label, active, ...rest }: { label: string; active: boolean; [k: string]: unknown }) => (
   <button
@@ -66,11 +27,11 @@ const Donut = () => (
   />
 )
 
-const KIT: { label: Child; art: Child }[] = [
-  { label: <>Send<br />Email</>, art: <span class="text-4xl">📣</span> },
-  { label: <>Send<br />Text Message</>, art: <span class="text-4xl">📲</span> },
-  { label: <>Track<br />Distribution</>, art: <Donut /> },
-  { label: <>Manage<br />Lists</>, art: <span class="text-4xl">👥</span> },
+const KIT: { label: Child; art: Child; href: string }[] = [
+  { label: <>Send<br />Email</>, art: <span class="text-4xl">📣</span>, href: '/distribution/compose' },
+  { label: <>Send<br />Text Message</>, art: <span class="text-4xl">📲</span>, href: '#' },
+  { label: <>Track<br />Distribution</>, art: <Donut />, href: '/distribution/sent' },
+  { label: <>Manage<br />Lists</>, art: <span class="text-4xl">👥</span>, href: '#' },
 ]
 
 const KitPanel = () => (
@@ -82,7 +43,7 @@ const KitPanel = () => (
       <div class="grid w-full grid-cols-2 gap-4 sm:w-auto sm:gap-x-12 sm:gap-y-8">
         {KIT.map((tile) => (
           <a
-            href="#"
+            href={tile.href}
             class="w-full h-28 sm:w-34 rounded-lg bg-white shadow-md flex flex-col items-center justify-center gap-2 text-center text-sm font-semibold leading-tight transition hover:shadow-lg hover:-translate-y-0.5"
           >
             {tile.art}
@@ -210,19 +171,15 @@ export const FilesPanel = ({ tab, page }: { tab: FilesTab; page: number }) => {
 }
 
 export const Dashboard = () => (
-  <>
-    <Sidebar open={false} />
-    <div class="pl-[68px] min-h-screen">
-      <Header />
-      <main class="px-3 pb-8 sm:px-6">
-        <h1 class="mt-3 rounded-lg border border-gray-200 shadow-sm py-2 text-center text-xl font-bold sm:text-2xl">
-          You've Got E-Mail
-        </h1>
-        <div class="mt-5 grid gap-5 sm:gap-8 lg:grid-cols-2">
-          <KitPanel />
-          <FilesPanel tab="files" page={0} />
-        </div>
-      </main>
-    </div>
-  </>
+  <Shell path="/">
+    <main class="px-3 pb-8 sm:px-6">
+      <h1 class="mt-3 rounded-lg border border-gray-200 shadow-sm py-2 text-center text-xl font-bold sm:text-2xl">
+        You've Got E-Mail
+      </h1>
+      <div class="mt-5 grid gap-5 sm:gap-8 lg:grid-cols-2">
+        <KitPanel />
+        <FilesPanel tab="files" page={0} />
+      </div>
+    </main>
+  </Shell>
 )

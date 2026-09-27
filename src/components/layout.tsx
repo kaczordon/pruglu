@@ -1,4 +1,5 @@
 import { html } from 'hono/html'
+import { SCRIPTS } from '../static-assets.ts'
 
 export const Layout = ({ title, children }: { title: string; children: any }) => html`
   <!DOCTYPE html>
@@ -11,6 +12,7 @@ export const Layout = ({ title, children }: { title: string; children: any }) =>
       <style>[un-cloak] { display: none; }</style>
       <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime@66/uno.global.js"></script>
       <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js"></script>
+      <script src="${SCRIPTS.app.url}" defer></script>
     </head>
     <body class="bg-white text-[#222] font-sans" un-cloak>
       ${children}
