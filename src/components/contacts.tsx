@@ -1,15 +1,16 @@
 import { raw } from 'hono/html'
-import { CREW, SECURITY_GROUPS, listsFor, type Contact } from '../data.ts'
-import { ChevronDownIcon, CloseIcon, InfoIcon, MoreIcon, SearchIcon } from './icons.tsx'
-import { GREEN, Shell } from './shell.tsx'
+import { CREW, SECURITY_GROUPS, listsFor, type Contact, type Group } from '../data.ts'
+import { Dialog, DialogActions, DialogError } from './feedback.tsx'
+import { ChevronDownIcon, MoreIcon, SearchIcon } from './icons.tsx'
+import { Shell } from './shell.tsx'
 
 const BY_NAME = [...CREW].sort((a, b) => a.name.localeCompare(b.name))
 
-export const searchContacts = (q: string) => {
+export const searchContacts = (q: string, lists: Group[]) => {
   const needle = q.trim().toLowerCase()
   if (!needle) return BY_NAME
   return BY_NAME.filter((c) =>
-    [c.name, c.email, c.role, c.department, ...listsFor(c)].some((field) => field.toLowerCase().includes(needle))
+    [c.name, c.email, c.role, c.department, ...listsFor(c, lists)].some((field) => field.toLowerCase().includes(needle))
   )
 }
 
@@ -23,7 +24,7 @@ const SOON = 'block w-full px-4 py-2 text-left text-sm text-gray-400 cursor-not-
 
 // Only some actions exist yet; the rest render disabled so the menu matches the design
 const RowMenu = ({ contact }: { contact: Contact }) => (
-  <details class="row-menu relative">
+  <details data-dropdown class="row-menu relative">
     <summary
       aria-label={`Actions for ${contact.name}`}
       class="grid h-9 w-9 cursor-pointer list-none place-items-center rounded-full text-gray-600 hover:bg-gray-100"
@@ -58,7 +59,7 @@ const RowMenu = ({ contact }: { contact: Contact }) => (
 
 // ---- Table -----------------------------------------------------------------------
 
-export const ContactRows = ({ contacts }: { contacts: Contact[] }) => (
+export const ContactRows = ({ contacts, lists }: { contacts: Contact[]; lists: Group[] }) => (
   <tbody id="contacts-body">
     {contacts.map((contact) => (
       <tr class="border-t border-gray-200 hover:bg-gray-50">
@@ -76,7 +77,7 @@ export const ContactRows = ({ contacts }: { contacts: Contact[] }) => (
           <div class="text-sm text-gray-500">{contact.role}</div>
           <div class="truncate text-sm text-gray-500 sm:hidden">{contact.email}</div>
         </td>
-        <td class="hidden py-4 pr-4 text-sm uppercase text-gray-500 md:table-cell">{listsFor(contact).join(', ')}</td>
+        <td class="hidden py-4 pr-4 text-sm uppercase text-gray-500 md:table-cell">{listsFor(contact, lists).join(', ')}</td>
         <td class="hidden max-w-0 truncate py-4 pr-4 text-sm text-gray-500 sm:table-cell">{contact.email}</td>
         <td class="w-14 py-4 pr-4">
           <RowMenu contact={contact} />
@@ -93,32 +94,19 @@ export const ContactRows = ({ contacts }: { contacts: Contact[] }) => (
   </tbody>
 )
 
-// ---- Invite dialog + toast ---------------------------------------------------------
+// ---- Invite dialog -------------------------------------------------------------------
 
-// Loaded into #modal-root; app.js calls showModal() on anything marked data-autoshow
 export const InviteDialog = ({ contact }: { contact: Contact }) => (
-  <dialog
-    data-autoshow
-    aria-labelledby="invite-title"
-    class="w-[min(560px,calc(100vw-2rem))] rounded-2xl p-8 shadow-xl backdrop:bg-black/40"
-  >
-    <form method="dialog" class="absolute right-4 top-4">
-      <button aria-label="Close" class="grid h-9 w-9 place-items-center rounded-full text-gray-600 hover:bg-gray-100">
-        <CloseIcon />
-      </button>
-    </form>
-    <form
-      hx-post={`/contacts/${contact.id}/invite`}
-      hx-target="#toasts"
-      hx-swap="beforeend"
-      class="flex flex-col items-center text-center"
-    >
-      <span class="grid h-14 w-14 place-items-center rounded-full bg-gray-500 text-2xl font-bold text-white">i</span>
-      <h2 id="invite-title" class="mt-4 text-2xl font-bold">Select security group for account access</h2>
-      <p class="mt-1 text-sm text-gray-500">
+  <Dialog
+    title="Select security group for account access"
+    subtitle={
+      <>
         Invite {contact.name} ({contact.email})
-      </p>
-      <div class="relative mt-6 w-full">
+      </>
+    }
+  >
+    <form hx-post={`/contacts/${contact.id}/invite`} hx-target="#toasts" hx-swap="beforeend" class="mt-6">
+      <div class="relative">
         <select
           name="group"
           required
@@ -134,30 +122,10 @@ export const InviteDialog = ({ contact }: { contact: Contact }) => (
         </select>
         <ChevronDownIcon class="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-gray-500" />
       </div>
-      <p id="invite-error" class="mt-2 min-h-5 text-sm text-red-600" aria-live="polite" />
-      <button
-        class="mt-2 rounded-full px-8 py-2.5 font-semibold text-white shadow hover:brightness-110"
-        style={`background:${GREEN}`}
-      >
-        Send Invite
-      </button>
+      <DialogError />
+      <DialogActions confirm="Send Invite" />
     </form>
-  </dialog>
-)
-
-// Appended to #toasts; app.js removes it after a few seconds or on ✕
-export const Toast = ({ message }: { message: string }) => (
-  <div
-    role="status"
-    class="toast pointer-events-auto flex w-[min(520px,calc(100vw-2rem))] items-center gap-3 rounded-full px-5 py-3 text-white shadow-lg"
-    style={`background:${GREEN}`}
-  >
-    <InfoIcon class="shrink-0" />
-    <span class="flex-1">{message}</span>
-    <button data-dismiss-toast aria-label="Dismiss" class="grid h-7 w-7 place-items-center rounded-full hover:bg-white/20">
-      <CloseIcon />
-    </button>
-  </div>
+  </Dialog>
 )
 
 // ---- Page ----------------------------------------------------------------------------
@@ -173,7 +141,7 @@ const CONTACTS_CSS = `
 .row-menu > summary::-webkit-details-marker { display: none }
 `
 
-export const ContactsPage = ({ q }: { q: string }) => (
+export const ContactsPage = ({ q, lists }: { q: string; lists: Group[] }) => (
   <Shell path="/contacts">
     <style>{raw(CONTACTS_CSS)}</style>
     {/* A plain GET form: "Email" submits the ticked rows as ?to=… to Compose */}
@@ -223,13 +191,11 @@ export const ContactsPage = ({ q }: { q: string }) => (
               <th class="w-14" />
             </tr>
           </thead>
-          <ContactRows contacts={searchContacts(q)} />
+          <ContactRows contacts={searchContacts(q, lists)} lists={lists} />
         </table>
       </div>
     </form>
     {/* Without JS the search still works as a normal GET to /contacts?q= */}
     <form id="contacts-search" action="/contacts" method="get" hidden />
-    <div id="modal-root" />
-    <div id="toasts" class="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex flex-col items-center gap-2" aria-live="polite" />
   </Shell>
 )

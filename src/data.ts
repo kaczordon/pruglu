@@ -2,7 +2,6 @@
 // pages look the same on every request (and on every serverless instance).
 
 export type Person = { name: string; email: string }
-export type Group = { id: string; name: string; members: Person[] }
 
 const FIRST = ['Ava', 'Ben', 'Chloe', 'Dev', 'Elena', 'Finn', 'Grace', 'Hugo', 'Iris', 'Jonah', 'Kai', 'Lena', 'Milo', 'Nora', 'Owen', 'Priya', 'Quinn', 'Rosa', 'Sam', 'Tara']
 const LAST = ['Adams', 'Brooks', 'Chen', 'Diaz', 'Evans', 'Fischer', 'Garcia', 'Hughes', 'Ito', 'Jensen', 'Khan', 'Lopez', 'Murphy', 'Novak', 'Okafor', 'Park', 'Reyes', 'Singh', 'Torres', 'Walsh']
@@ -38,11 +37,15 @@ export const CREW: Contact[] = Array.from({ length: 120 }, (_, i) => {
 
 export const findContact = (id: number) => CREW.find((c) => c.id === id)
 
+// A named set of contacts: a distribution list or a department
+export type Group = { id: string; name: string; members: Contact[] }
+
 // Stepping by 3 through the crew never repeats for up to 40 picks
 const pick = (start: number, count: number) =>
   Array.from({ length: count }, (_, k) => CREW[(start + k * 3) % CREW.length])
 
-export const LISTS: Group[] = (
+// Starting distribution lists; the live, editable copy lives in store.ts
+export const SEED_LISTS: Group[] = (
   [
     ['Call Sheets', 27],
     ['Crew List - General', 15],
@@ -126,8 +129,8 @@ export const MESSAGE_BODIES: Record<SentMessage['kind'], string> = {
 // ---- Contacts ------------------------------------------------------------------
 
 // Names of the distribution lists a contact is on, e.g. ["Call Sheets", "Scripts"]
-export const listsFor = (contact: Person) =>
-  LISTS.filter((list) => list.members.some((m) => m.email === contact.email)).map((list) => list.name)
+export const listsFor = (contact: Person, lists: Group[]) =>
+  lists.filter((list) => list.members.some((m) => m.email === contact.email)).map((list) => list.name)
 
 export const SECURITY_GROUPS = ['ADMIN', 'EXEC', 'DTR', 'CREW'] as const
 export type SecurityGroup = (typeof SECURITY_GROUPS)[number]

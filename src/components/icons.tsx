@@ -220,3 +220,23 @@ export const InfoIcon = ({ size = 20, class: cls }: IconProps) => (
     <path d="M12 11v5M12 7.5v.01" />
   </Svg>
 )
+
+export const CheckCircleIcon = ({ size = 20, class: cls }: IconProps) => (
+  <Svg size={size} class={cls}>
+    <circle cx="12" cy="12" r="10" />
+    <path d="m8 12 3 3 5-6" />
+  </Svg>
+)
+
+export const GearIcon = ({ size = 20, class: cls }: IconProps) => (
+  <Svg size={size} class={cls}>
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
+  </Svg>
+)
+
+export const PencilIcon = ({ size = 18, class: cls }: IconProps) => (
+  <Svg size={size} class={cls}>
+    <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z" />
+  </Svg>
+)

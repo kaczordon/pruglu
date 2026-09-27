@@ -3,10 +3,11 @@
 export const APP_JS = `(() => {
   const all = (sel) => [...document.querySelectorAll(sel)]
 
-  // Row "⋯" menus are <details>: only one open, closed by outside click, item click or Escape
-  const closeMenus = (except) => all('details.row-menu[open]').forEach((d) => { if (d !== except) d.open = false })
+  // Dropdown menus are <details data-dropdown>: only one open, closed by outside click,
+  // picking an item, or Escape
+  const closeMenus = (except) => all('details[data-dropdown][open]').forEach((d) => { if (d !== except) d.open = false })
   document.addEventListener('click', (e) => {
-    const menu = e.target.closest && e.target.closest('details.row-menu')
+    const menu = e.target.closest && e.target.closest('details[data-dropdown]')
     closeMenus(menu)
     if (menu && e.target.closest('[role=menuitem]')) menu.open = false
   })
@@ -44,7 +45,29 @@ export const APP_JS = `(() => {
       setTimeout(() => t.remove(), 5000)
     })
   })
+  // htmx ignores error responses by default, which makes a click look dead. Say so instead.
+  const errorToast = (message) => {
+    const toasts = document.getElementById('toasts')
+    if (!toasts) return
+    const toast = document.createElement('div')
+    toast.className = 'toast pointer-events-auto flex w-[min(520px,calc(100vw-2rem))] items-center gap-3 rounded-full px-5 py-3 text-white shadow-lg'
+    toast.style.background = '#dc2626'
+    toast.setAttribute('role', 'alert')
+    toast.textContent = message
+    toasts.append(toast)
+    setTimeout(() => toast.remove(), 6000)
+  }
+  document.addEventListener('htmx:responseError', (e) => {
+    const status = e.detail.xhr.status
+    errorToast(status === 404 ? 'That item no longer exists. Try reloading the page.' : 'Something went wrong (' + status + '). Please try again.')
+  })
+  document.addEventListener('htmx:sendError', () => errorToast('Could not reach the server. Check your connection.'))
+
   document.addEventListener('close-dialog', () => all('dialog[open]').forEach((d) => d.close()))
+  document.addEventListener('click', (e) => {
+    const close = e.target.closest && e.target.closest('[data-close-dialog]')
+    if (close) close.closest('dialog').close()
+  })
 
   document.addEventListener('click', (e) => {
     const dismiss = e.target.closest && e.target.closest('[data-dismiss-toast]')

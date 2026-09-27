@@ -1,8 +1,10 @@
 import type { Child } from 'hono/jsx'
 import { BellIcon, UploadIcon, UserPlusIcon } from './icons.tsx'
+import { FeedbackRoots } from './feedback.tsx'
 import { Sidebar } from './sidebar.tsx'
+import { GREEN } from './theme.ts'
 
-export const GREEN = '#3fae4a'
+export { GREEN } from './theme.ts'
 
 const Header = () => (
   <header class="flex items-center justify-between gap-2 px-3 pt-4 sm:px-6">
@@ -41,5 +43,6 @@ export const Shell = ({ path, children }: { path: string; children: Child }) => 
       <Header />
       {children}
     </div>
+    <FeedbackRoots />
   </>
 )

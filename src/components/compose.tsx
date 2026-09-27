@@ -12,7 +12,7 @@ import {
   SearchIcon,
   UndoIcon,
 } from './icons.tsx'
-import { CREW, DEPARTMENTS, LISTS, type Group } from '../data.ts'
+import { CREW, DEPARTMENTS, type Group } from '../data.ts'
 import { GREEN, Shell } from './shell.tsx'
 import { CollapsibleSide } from './side-panel.tsx'
 import { SCRIPTS } from '../static-assets.ts'
@@ -45,12 +45,12 @@ type Chip = { label: string; title?: string; kind: 'group' | 'person' | 'invalid
 
 // One chip per ticked list/department, then people ticked individually, then
 // typed addresses. `count` is the number of unique valid emails across all three.
-export const resolveRecipients = (typed: string, groupIds: string[], checked: string[]) => {
+export const resolveRecipients = (lists: Group[], typed: string, groupIds: string[], checked: string[]) => {
   const emails = new Set(checked)
   const chips: Chip[] = []
   const shown = new Set<string>()
 
-  for (const group of [...LISTS, ...DEPARTMENTS]) {
+  for (const group of [...lists, ...DEPARTMENTS]) {
     if (groupIds.includes(group.id)) {
       chips.push({ label: `${group.name} (${group.members.length})`, kind: 'group' })
       group.members.forEach((m) => {
@@ -163,7 +163,7 @@ const GroupRow = ({ group }: { group: Group }) => (
   </details>
 )
 
-const ListsPanel = ({ emails }: { emails: string }) => (
+const ListsPanel = ({ emails, lists }: { emails: string; lists: Group[] }) => (
   <aside
     class="side-panel shrink-0 flex flex-col border-b border-gray-200 md:w-[380px] md:border-b-0 md:border-r"
     hx-post="/partials/compose/recipients"
@@ -195,7 +195,7 @@ const ListsPanel = ({ emails }: { emails: string }) => (
       </label>
     </div>
     <div class="pane-lists max-h-80 overflow-y-auto md:max-h-none md:flex-1">
-      {LISTS.map((group) => (
+      {lists.map((group) => (
         <GroupRow group={group} />
       ))}
     </div>
@@ -372,12 +372,12 @@ details[open] > summary .chev { transform: rotate(180deg) }
 `
 
 // `to` pre-fills recipients, e.g. from Contacts → Email
-export const ComposePage = ({ to = [] }: { to?: string[] }) => (
+export const ComposePage = ({ to = [], lists }: { to?: string[]; lists: Group[] }) => (
   <Shell path="/distribution/compose">
     <style>{raw(COMPOSE_CSS)}</style>
     <main id="compose" class="mt-3 flex flex-1 flex-col border-t border-gray-200 md:flex-row">
-      <CollapsibleSide id="lists-collapsed" label="Lists" panel={<ListsPanel emails={to.join(', ')} />} />
-      <MessageForm chips={resolveRecipients(to.join(','), [], []).chips} />
+      <CollapsibleSide id="lists-collapsed" label="Lists" panel={<ListsPanel emails={to.join(', ')} lists={lists} />} />
+      <MessageForm chips={resolveRecipients(lists, to.join(','), [], []).chips} />
     </main>
     <script src={SCRIPTS.compose.url} defer />
   </Shell>

@@ -27,7 +27,7 @@ const NAV: NavItem[] = [
       { label: 'Sent', href: '/distribution/sent' },
       { label: 'Drafts', href: '#' },
       { label: 'Outbox', href: '#' },
-      { label: 'Lists', href: '#' },
+      { label: 'Lists', href: '/distribution/lists' },
     ],
   },
   {
@@ -36,7 +36,9 @@ const NAV: NavItem[] = [
     icon: ContactIcon,
     children: [
       { label: 'All', href: '/contacts' },
-      ...['Crew', 'Cast', 'Agent', 'Studio', 'Union', 'Vendor', 'Distribution Lists'].map((label) => ({ label, href: '#' })),
+      ...['Crew', 'Cast', 'Agent', 'Studio', 'Union', 'Vendor'].map((label) => ({ label, href: '#' })),
+      // Its own URL (redirecting to the Lists page) so only Distribution shows as active there
+      { label: 'Distribution Lists', href: '/contacts/lists' },
     ],
   },
   { label: 'Reports', href: '#', icon: ReportIcon },
